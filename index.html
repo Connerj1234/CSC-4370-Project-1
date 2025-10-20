@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Microsite - Pizza Perfection</title>
+  <style>
+    /* CSS Variables for theming */
+    :root {
+      --primary-color: #006491;
+      --secondary-color: #e31837;
+      --accent-color: #ffc72c;
+      --text-dark: #1a1a1a;
+      --text-light: #ffffff;
+      --bg-light: #f8f8f8;
+      --bg-white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.15);
+      --transition-speed: 0.3s;
+    }
+
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-dark);
+      background-color: var(--bg-light);
+      overflow-x: hidden;
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Accessibility: Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary-color) 0%, #004d6d 100%);
+    }
+
+    /* Animated background glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 199, 44, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.8;
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    /* Navigation Cards */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: -3rem auto 0;
+      padding: 0 2rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-card {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: all var(--transition-speed) ease;
+      text-decoration: none;
+      color: var(--text-dark);
+      display: block;
+      transform: translateY(0);
+    }
+
+    .nav-card:hover,
+    .nav-card:focus {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+      outline: 3px solid var(--accent-color);
+      outline-offset: 2px;
+    }
+
+    .nav-card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .nav-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .nav-card p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Section Styles */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    section h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--primary-color);
+      margin-bottom: 3rem;
+      text-align: center;
+      position: relative;
+    }
+
+    section h2::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--secondary-color);
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* Recipe Cards Section */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      perspective: 1000px;
+    }
+
+    .recipe-card {
+      position: relative;
+      height: 400px;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+      cursor: pointer;
+    }
+
+    .recipe-card:hover {
+      transform: rotateY(10deg) scale(1.05);
+    }
+
+    .recipe-card:focus-within {
+      outline: 3px solid var(--accent-color);
+      outline-offset: 4px;
+    }
+
+    .recipe-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow var(--transition-speed) ease;
+    }
+
+    .recipe-card:hover .recipe-card-inner {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .recipe-card-image {
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(135deg, var(--secondary-color) 0%, #ff4757 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: var(--text-light);
+    }
+
+    .recipe-card-content {
+      padding: 1.5rem;
+    }
+
+    .recipe-card-content h3 {
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .recipe-card-content p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Ingredient Checklist Section */
+    #ingredients {
+      background: var(--bg-white);
+    }
+
+    .ingredients-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .ingredients-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ingredient-list {
+      list-style: none;
+    }
+
+    .ingredient-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      background: var(--bg-light);
+      border-radius: 8px;
+      transition: all var(--transition-speed) ease;
+      position: relative;
+    }
+
+    .ingredient-item:hover {
+      background: #e8f4f8;
+      transform: translateX(8px);
+    }
+
+    /* Custom checkbox styling */
+    .ingredient-checkbox {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .ingredient-checkbox + label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      width: 100%;
+      padding-left: 2.5rem;
+      position: relative;
+    }
+
+    .ingredient-checkbox + label::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--primary-color);
+      border-radius: 4px;
+      background: var(--bg-white);
+      transition: all var(--transition-speed) ease;
+    }
+
+    .ingredient-checkbox:checked + label::before {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .ingredient-checkbox + label::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      width: 8px;
+      height: 14px;
+      border: solid var(--text-light);
+      border-width: 0 3px 3px 0;
+      transform: translateY(-50%) rotate(45deg) scale(0);
+      transition: transform var(--transition-speed) ease;
+    }
+
+    .ingredient-checkbox:checked + label::after {
+      transform: translateY(-60%) rotate(45deg) scale(1);
+    }
+
+    .ingredient-checkbox:focus + label::before {
+      outline: 3px solid var(--accent-color);
+      outline-offset: 2px;
+    }
+
+    .ingredient-sidebar {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #004d6d 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      color: var(--text-light);
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .ingredient-sidebar h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Step-by-Step Instructions Section */
+    .steps-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: stepReveal 0.6s ease forwards;
+    }
+
+    .step:nth-child(1) { animation-delay: 0.1s; }
+    .step:nth-child(2) { animation-delay: 0.3s; }
+    .step:nth-child(3) { animation-delay: 0.5s; }
+    .step:nth-child(4) { animation-delay: 0.7s; }
+    .step:nth-child(5) { animation-delay: 0.9s; }
+
+    @keyframes stepReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 50px;
+      height: 50px;
+      background: var(--secondary-color);
+      color: var(--text-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-right: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .step-content {
+      flex: 1;
+      background: var(--bg-white);
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .step-content h3 {
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-content p {
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .step-arrow {
+      text-align: center;
+      font-size: 2rem;
+      color: var(--secondary-color);
+      margin: -1rem 0;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
+    }
+
+    /* Footer */
+    footer {
+      background: var(--text-dark);
+      color: var(--text-light);
+      text-align: center;
+      padding: 2rem;
+      margin-top: 4rem;
+    }
+
+    footer p {
+      opacity: 0.8;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-cards {
+        grid-template-columns: 1fr;
+        margin-top: -2rem;
+      }
+
+      .recipe-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .step-number {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+
+    /* Focus styles for accessibility */
+    a:focus,
+    button:focus,
+    input:focus {
+      outline: 3px solid var(--accent-color);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+   Hero Section
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Pizza Perfection</h1>
+      <p>Discover delicious recipes crafted with passion and perfection</p>
+    </div>
+  </section>
+
+   Navigation Cards
+  <div class="nav-cards">
+    <a href="#recipes" class="nav-card">
+      <span class="nav-card-icon">🍕</span>
+      <h3>Recipes</h3>
+      <p>Browse our collection of amazing pizza recipes</p>
+    </a>
+    <a href="#ingredients" class="nav-card">
+      <span class="nav-card-icon">🧀</span>
+      <h3>Ingredients</h3>
+      <p>Check off what you need for the perfect pizza</p>
+    </a>
+    <a href="#steps" class="nav-card">
+      <span class="nav-card-icon">👨‍🍳</span>
+      <h3>Instructions</h3>
+      <p>Follow our step-by-step cooking guide</p>
+    </a>
+  </div>
+
+   Recipe Cards Section
+  <section id="recipes">
+    <h2>Our Signature Recipes</h2>
+    <div class="recipe-grid">
+      <div class="recipe-card" tabindex="0">
+        <div class="recipe-card-inner">
+          <div class="recipe-card-image">🍕</div>
+          <div class="recipe-card-content">
+            <h3>Classic Margherita</h3>
+            <p>Fresh mozzarella, basil, and tomato sauce on a perfectly crispy crust</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" tabindex="0">
+        <div class="recipe-card-inner">
+          <div class="recipe-card-image">🌶️</div>
+          <div class="recipe-card-content">
+            <h3>Spicy Pepperoni</h3>
+            <p>Loaded with pepperoni and a kick of jalapeños for heat lovers</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" tabindex="0">
+        <div class="recipe-card-inner">
+          <div class="recipe-card-image">🥓</div>
+          <div class="recipe-card-content">
+            <h3>BBQ Chicken</h3>
+            <p>Tender chicken, bacon, and BBQ sauce with red onions</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" tabindex="0">
+        <div class="recipe-card-inner">
+          <div class="recipe-card-image">🌿</div>
+          <div class="recipe-card-content">
+            <h3>Veggie Supreme</h3>
+            <p>Fresh vegetables including peppers, mushrooms, and olives</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" tabindex="0">
+        <div class="recipe-card-inner">
+          <div class="recipe-card-image">🧄</div>
+          <div class="recipe-card-content">
+            <h3>Garlic White</h3>
+            <p>Creamy white sauce with roasted garlic and Italian herbs</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" tabindex="0">
+        <div class="recipe-card-inner">
+          <div class="recipe-card-image">🍖</div>
+          <div class="recipe-card-content">
+            <h3>Meat Lovers</h3>
+            <p>Pepperoni, sausage, bacon, and ham for the ultimate carnivore</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   Ingredient Checklist Section
+  <section id="ingredients">
+    <h2>Ingredient Checklist</h2>
+    <div class="ingredients-container">
+      <ul class="ingredient-list">
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient1" class="ingredient-checkbox">
+          <label for="ingredient1">Pizza Dough (500g)</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient2" class="ingredient-checkbox">
+          <label for="ingredient2">Tomato Sauce (1 cup)</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient3" class="ingredient-checkbox">
+          <label for="ingredient3">Fresh Mozzarella (300g)</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient4" class="ingredient-checkbox">
+          <label for="ingredient4">Fresh Basil Leaves</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient5" class="ingredient-checkbox">
+          <label for="ingredient5">Olive Oil (2 tbsp)</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient6" class="ingredient-checkbox">
+          <label for="ingredient6">Salt & Pepper</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient7" class="ingredient-checkbox">
+          <label for="ingredient7">Garlic Cloves (3)</label>
+        </li>
+        <li class="ingredient-item">
+          <input type="checkbox" id="ingredient8" class="ingredient-checkbox">
+          <label for="ingredient8">Parmesan Cheese (50g)</label>
+        </li>
+      </ul>
+      <div class="ingredient-sidebar">
+        <h3>Pro Tip</h3>
+        <p>Always use fresh, high-quality ingredients for the best results. Room temperature dough is easier to work with!</p>
+      </div>
+    </div>
+  </section>
+
+   Step-by-Step Instructions Section
+  <section id="steps">
+    <h2>Step-by-Step Instructions</h2>
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Prepare the Dough</h3>
+          <p>Take your pizza dough out of the refrigerator 30 minutes before use. Let it come to room temperature for easier stretching and shaping.</p>
+        </div>
+      </div>
+      <div class="step-arrow">↓</div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Preheat Your Oven</h3>
+          <p>Preheat your oven to 475°F (245°C). If you have a pizza stone, place it in the oven while preheating for optimal crispiness.</p>
+        </div>
+      </div>
+      <div class="step-arrow">↓</div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Shape and Stretch</h3>
+          <p>On a floured surface, gently stretch the dough into a 12-inch circle. Use your hands to create a slightly thicker edge for the crust.</p>
+        </div>
+      </div>
+      <div class="step-arrow">↓</div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Add Toppings</h3>
+          <p>Spread tomato sauce evenly, leaving a 1-inch border. Add mozzarella cheese and your favorite toppings. Don't overload to ensure even cooking.</p>
+        </div>
+      </div>
+      <div class="step-arrow">↓</div>
+
+      <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h3>Bake to Perfection</h3>
+          <p>Bake for 12-15 minutes until the crust is golden and cheese is bubbly. Let cool for 2 minutes, slice, and enjoy your homemade pizza!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   Footer
+  <footer>
+    <p>&copy; 2025 Pizza Perfection. All rights reserved.</p>
+  </footer>
+</body>
+</html>
