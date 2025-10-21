@@ -511,3 +511,65 @@
     outline: 3px solid var(--accent-color);
     outline-offset: 3px;
   }
+
+  /* Animated Nutrition Bars */
+#nutrition { background: var(--bg-white); }
+
+.nutrition-bars{
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+
+.nutrition-bars li{
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nutrition-bars span{
+  color: #666;
+  font-weight: 600;
+}
+
+.nutrition-bars .bar{
+  --h: 12px;
+  position: relative;
+  height: var(--h);
+  background: #e9eef3;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.nutrition-bars .bar::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+  animation: nb-fill 1.4s ease forwards;
+  border-radius: inherit;
+}
+
+.nutrition-bars .bar b{
+  position: absolute;
+  right: .5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: .85rem;
+  color: var(--text-dark);
+}
+
+/* Animate width to the percent declared inline via --pct */
+@keyframes nb-fill { to { width: var(--pct); } }
+
+/* Mobile tweak */
+@media (max-width: 520px){
+  .nutrition-bars li{ grid-template-columns: 100px 1fr; }
+}
+
